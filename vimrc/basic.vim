@@ -134,8 +134,14 @@ set nrformats=octal,hex,alpha
 " Enable syntax highlighting
 syntax enable
 
+"------------------------------------------------------------------------------
+" Custom color scheme
+"------------------------------------------------------------------------------
 try
-    colorscheme desert
+    colorscheme PaperColor 
+    " colorscheme jellybeans
+    " colorscheme desert
+    " colorscheme foursee
 catch
 endtry
 

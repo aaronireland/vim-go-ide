@@ -1,33 +1,42 @@
 " Load pathogen paths
 call pathogen#infect('~/.vim_go_runtime/bundle/forked/{}')
 call pathogen#infect('~/.vim_go_runtime/bundle/pristine/{}')
+call pathogen#infect('~/.vim_go_runtime/bundle/{}')
 call pathogen#helptags()
 
 "------------------------------------------------------------------------------
 " Custom color scheme
 "------------------------------------------------------------------------------
 try
-    colorscheme foursee
+    colorscheme PaperColor 
+    " colorscheme jellybeans
+    " colorscheme desert
+    " colorscheme foursee
 catch
 endtry
 
+set background=dark
 "------------------------------------------------------------------------------
 " NERDTree
 "------------------------------------------------------------------------------
 
 " General properties
 let NERDTreeDirArrows=1
-let NERDTreeMinimalUI=1
+" let NERDTreeMinimalUI=1
 let NERDTreeIgnore=['\.o$', '\.pyc$', '\.php\~$']
 let NERDTreeWinSize = 35
 
 " Make sure that when NT root is changed, Vim's pwd is also updated
-let NERDTreeChDirMode = 2
+" let NERDTreeChDirMode = 2
 let NERDTreeShowLineNumbers = 1
 let NERDTreeAutoCenter = 1
+let NERDTreeQuitOnOpen = 1
 
 " Open NERDTree on startup, when no file has been specified
 autocmd VimEnter * if !argc() | NERDTree | endif
+
+" Close NERDTree if it is the only window left open
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Locate file in hierarchy quickly
 map <leader>T :NERDTreeFind<cr>
@@ -84,6 +93,10 @@ let g:neocomplete#enable_smart_case = 1
 " Set minimum syntax keyword length.
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+if !exists('g:neocomplete#force_omni_input_patterns')
+        let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.go = '[^.[:digit:] *\t]\.'
 
 " Close popup by <Space>.
 " inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
@@ -165,6 +178,8 @@ let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
 
 nmap <F8> :TagbarToggle<CR>
+nmap <leader>h :TagbarToggle<CR><C-l>
+
 let g:tagbar_type_go = {  
     \ 'ctagstype' : 'go',
     \ 'kinds'     : [
@@ -192,3 +207,18 @@ let g:tagbar_type_go = {
     \ 'ctagsbin'  : 'gotags',
     \ 'ctagsargs' : '-sort -silent'
 \ }
+
+" ALE linter for go
+let g:ale_linters = {
+    \   'go': ['gometalinter', 'gofmt'],
+\}
+
+" Error and warning signs.
+let g:ale_sign_error = '⤫'
+let g:ale_sign_warning = '⚠'
+" Enable integration with airline.
+let g:airline#extensions#ale#enabled = 1
+let g:airline_theme='minimalist'
+
+set runtimepath^=~/.vim/bundle/ctrlp.vim
+let g:tagbar_ctags_bin='/usr/local/bin/ctags'
